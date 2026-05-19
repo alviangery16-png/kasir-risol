@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kasir Risol</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <h1>KASIR RISOL</h1>
+
+  <label>Pilih Menu</label>
+  <select id="menu">
+    <option>Risol Mayo</option>
+    <option>Risol Coklat</option>
+    <option>Risol Mentai</option>
+    <option>Risol Matcha</option>
+  </select>
+
+  <label>Jumlah</label>
+  <input type="number" id="jumlah" placeholder="Masukkan jumlah">
+
+  <button onclick="hitungTotal()">
+    Hitung Total
+  </button>
+
+  <div class="hasil">
+    <h2 id="total">Rp0</h2>
+  </div>
+
+  <button onclick="simpanData()" class="save">
+    Simpan Penjualan
+  </button>
+
+  <h3>Riwayat Penjualan</h3>
+
+  <ul id="riwayat"></ul>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
