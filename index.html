@@ -6,6 +6,7 @@
   <title>Kasir Risol</title>
 
   <style>
+
     body{
       font-family: Arial, sans-serif;
       background:#f5f5f5;
@@ -80,6 +81,7 @@
       border-radius:10px;
       margin-top:10px;
     }
+
   </style>
 </head>
 
@@ -121,23 +123,56 @@
 </div>
 
 <script>
+
 function hitungTotal(){
 
   const menu = document.getElementById("menu").value;
-  const jumlah = document.getElementById("jumlah").value;
 
-  let harga = 0;
+  const jumlah = parseInt(
+    document.getElementById("jumlah").value
+  );
 
-  if(menu === "Risol Mayo") harga = 3000;
-  if(menu === "Risol Coklat") harga = 2500;
-  if(menu === "Risol Mentai") harga = 4000;
-  if(menu === "Risol Matcha") harga = 3500;
+  let total = 0;
 
-  const total = harga * jumlah;
+  // RISOL MAYO
+  if(menu === "Risol Mayo"){
+
+    if(jumlah >= 3){
+
+      total = Math.floor(jumlah / 3) * 10000;
+
+      const sisa = jumlah % 3;
+
+      total += sisa * 3500;
+
+    }else{
+
+      total = jumlah * 3500;
+
+    }
+
+  }
+
+  // RISOL COKLAT
+  if(menu === "Risol Coklat"){
+    total = jumlah * 4000;
+  }
+
+  // RISOL MENTAI
+  if(menu === "Risol Mentai"){
+    total = jumlah * 4000;
+  }
+
+  // RISOL MATCHA
+  if(menu === "Risol Matcha"){
+    total = jumlah * 4000;
+  }
 
   document.getElementById("total").innerText =
     "Rp" + total.toLocaleString("id-ID");
+
 }
+
 </script>
 
 <script type="module">
@@ -156,6 +191,7 @@ import {
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
 const firebaseConfig = {
+
   apiKey: "AIzaSyCPyIkdTZVPBonxCjPDtHo5JeDVqtjfUTE",
   authDomain: "risol-app.firebaseapp.com",
   projectId: "risol-app",
@@ -163,6 +199,7 @@ const firebaseConfig = {
   messagingSenderId: "710080225252",
   appId: "1:710080225252:web:0f385760c1dac26d4731f1",
   measurementId: "G-8QKKDJK2Q3"
+
 };
 
 const app = initializeApp(firebaseConfig);
@@ -177,14 +214,41 @@ window.simpanData = async function(){
     document.getElementById("jumlah").value
   );
 
-  let harga = 0;
+  let total = 0;
 
-  if(menu === "Risol Mayo") harga = 3000;
-  if(menu === "Risol Coklat") harga = 2500;
-  if(menu === "Risol Mentai") harga = 4000;
-  if(menu === "Risol Matcha") harga = 3500;
+  // RISOL MAYO
+  if(menu === "Risol Mayo"){
 
-  const total = harga * jumlah;
+    if(jumlah >= 3){
+
+      total = Math.floor(jumlah / 3) * 10000;
+
+      const sisa = jumlah % 3;
+
+      total += sisa * 3500;
+
+    }else{
+
+      total = jumlah * 3500;
+
+    }
+
+  }
+
+  // RISOL COKLAT
+  if(menu === "Risol Coklat"){
+    total = jumlah * 4000;
+  }
+
+  // RISOL MENTAI
+  if(menu === "Risol Mentai"){
+    total = jumlah * 4000;
+  }
+
+  // RISOL MATCHA
+  if(menu === "Risol Matcha"){
+    total = jumlah * 4000;
+  }
 
   await addDoc(collection(db, "penjualan"), {
 
