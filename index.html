@@ -276,14 +276,25 @@ onSnapshot(q, (snapshot) => {
 
     const data = doc.data();
 
-    const waktu = data.waktu?.toDate();
+    let waktu = null;
+
+    if(data.waktu){
+      waktu = data.waktu.toDate();
+    }
 
     const tanggal = waktu
-      ? waktu.toLocaleDateString("id-ID")
+      ? waktu.toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric"
+        })
       : "-";
 
     const jam = waktu
-      ? waktu.toLocaleTimeString("id-ID")
+      ? waktu.toLocaleTimeString("id-ID", {
+          hour: "2-digit",
+          minute: "2-digit"
+        })
       : "-";
 
     html += `
