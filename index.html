@@ -1,175 +1,87 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kasir Risol</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
+<title>Kasir Risol</title>
 
-    body{
-      font-family: Arial, sans-serif;
-      background:#f5f5f5;
-      margin:0;
-      padding:20px;
-    }
+<style>
 
-    .container{
-      max-width:400px;
-      margin:auto;
-      background:white;
-      padding:20px;
-      border-radius:15px;
-      box-shadow:0 0 10px rgba(0,0,0,0.1);
-    }
+body{
+  font-family:Arial;
+  background:#f5f5f5;
+  padding:20px;
+}
 
-    h1{
-      text-align:center;
-    }
+.container{
+  max-width:400px;
+  margin:auto;
+  background:white;
+  padding:20px;
+  border-radius:15px;
+}
 
-    label{
-      display:block;
-      margin-top:15px;
-      margin-bottom:5px;
-      font-weight:bold;
-    }
+select,input,button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  box-sizing:border-box;
+}
 
-    select,
-    input{
-      width:100%;
-      padding:10px;
-      border-radius:10px;
-      border:1px solid #ccc;
-      box-sizing:border-box;
-    }
+button{
+  border:none;
+  color:white;
+  background:green;
+  cursor:pointer;
+}
 
-    button{
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:10px;
-      margin-top:15px;
-      font-size:16px;
-      cursor:pointer;
-    }
+#total{
+  margin-top:20px;
+}
 
-    .hitung{
-      background:#ff9800;
-      color:white;
-    }
+li{
+  background:#eee;
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  list-style:none;
+}
 
-    .save{
-      background:#4caf50;
-      color:white;
-    }
+ul{
+  padding:0;
+}
 
-    .hasil{
-      text-align:center;
-      margin-top:20px;
-      font-size:24px;
-      font-weight:bold;
-    }
-
-    ul{
-      padding:0;
-      list-style:none;
-    }
-
-    li{
-      background:#f1f1f1;
-      padding:10px;
-      border-radius:10px;
-      margin-top:10px;
-    }
-
-  </style>
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <h1>KASIR RISOL</h1>
+<h1>Kasir Risol</h1>
 
-  <label>Pilih Menu</label>
+<select id="menu">
+  <option>Risol Mayo</option>
+  <option>Risol Coklat</option>
+  <option>Risol Mentai</option>
+  <option>Risol Matcha</option>
+</select>
 
-  <select id="menu">
-    <option>Risol Mayo</option>
-    <option>Risol Coklat</option>
-    <option>Risol Mentai</option>
-    <option>Risol Matcha</option>
-  </select>
+<input type="number" id="jumlah" placeholder="Jumlah">
 
-  <label>Jumlah</label>
+<button onclick="simpanData()">
+Simpan Penjualan
+</button>
 
-  <input type="number" id="jumlah" placeholder="Masukkan jumlah">
+<h2 id="total">Rp0</h2>
 
-  <button class="hitung" onclick="hitungTotal()">
-    Hitung Total
-  </button>
+<h3>Riwayat Penjualan</h3>
 
-  <div class="hasil">
-    <h2 id="total">Rp0</h2>
-  </div>
-
-  <button class="save" onclick="simpanData()">
-    Simpan Penjualan
-  </button>
-
-  <h3>Riwayat Penjualan</h3>
-
-  <ul id="riwayat"></ul>
+<ul id="riwayat"></ul>
 
 </div>
-
-<script>
-
-function hitungTotal(){
-
-  const menu = document.getElementById("menu").value;
-
-  const jumlah = parseInt(
-    document.getElementById("jumlah").value
-  );
-
-  let total = 0;
-
-  if(menu === "Risol Mayo"){
-
-    if(jumlah >= 3){
-
-      total = Math.floor(jumlah / 3) * 10000;
-
-      const sisa = jumlah % 3;
-
-      total += sisa * 3500;
-
-    }else{
-
-      total = jumlah * 3500;
-
-    }
-
-  }
-
-  if(menu === "Risol Coklat"){
-    total = jumlah * 4000;
-  }
-
-  if(menu === "Risol Mentai"){
-    total = jumlah * 4000;
-  }
-
-  if(menu === "Risol Matcha"){
-    total = jumlah * 4000;
-  }
-
-  document.getElementById("total").innerText =
-    "Rp" + total.toLocaleString("id-ID");
-
-}
-
-</script>
 
 <script type="module">
 
@@ -191,8 +103,7 @@ const firebaseConfig = {
   projectId: "risol-app",
   storageBucket: "risol-app.firebasestorage.app",
   messagingSenderId: "710080225252",
-  appId: "1:710080225252:web:0f385760c1dac26d4731f1",
-  measurementId: "G-8QKKDJK2Q3"
+  appId: "1:710080225252:web:0f385760c1dac26d4731f1"
 
 };
 
@@ -208,17 +119,21 @@ window.simpanData = async function(){
     document.getElementById("jumlah").value
   );
 
+  if(!jumlah || jumlah <= 0){
+    alert("Masukkan jumlah dulu");
+    return;
+  }
+
   let total = 0;
 
+  // RISOL MAYO
   if(menu === "Risol Mayo"){
 
     if(jumlah >= 3){
 
       total = Math.floor(jumlah / 3) * 10000;
 
-      const sisa = jumlah % 3;
-
-      total += sisa * 3500;
+      total += (jumlah % 3) * 3500;
 
     }else{
 
@@ -228,46 +143,37 @@ window.simpanData = async function(){
 
   }
 
-  if(menu === "Risol Coklat"){
+  // SELAIN MAYO
+  else{
+
     total = jumlah * 4000;
+
   }
 
-  if(menu === "Risol Mentai"){
-    total = jumlah * 4000;
-  }
+  document.getElementById("total").innerText =
+    "Rp" + total.toLocaleString("id-ID");
 
-  if(menu === "Risol Matcha"){
-    total = jumlah * 4000;
-  }
+  const now = new Date();
 
-  const sekarang = new Date();
-
-  const tanggal = sekarang.toLocaleDateString("id-ID");
-
-  const jam = sekarang.toLocaleTimeString("id-ID", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-
-  await addDoc(collection(db, "penjualan"), {
+  await addDoc(collection(db,"penjualan"),{
 
     menu: menu,
     jumlah: jumlah,
     total: total,
-    tanggal: tanggal,
-    jam: jam
+    tanggal: now.toLocaleDateString("id-ID"),
+    jam: now.toLocaleTimeString("id-ID")
 
   });
 
-  alert("Penjualan berhasil disimpan!");
+  alert("Berhasil disimpan");
 
 };
 
-onSnapshot(collection(db, "penjualan"), (snapshot) => {
+onSnapshot(collection(db,"penjualan"),(snapshot)=>{
 
   let html = "";
 
-  snapshot.forEach((doc) => {
+  snapshot.forEach((doc)=>{
 
     const data = doc.data();
 
