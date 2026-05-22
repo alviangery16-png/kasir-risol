@@ -134,7 +134,6 @@ function hitungTotal(){
 
   let total = 0;
 
-  // RISOL MAYO
   if(menu === "Risol Mayo"){
 
     if(jumlah >= 3){
@@ -153,17 +152,14 @@ function hitungTotal(){
 
   }
 
-  // RISOL COKLAT
   if(menu === "Risol Coklat"){
     total = jumlah * 4000;
   }
 
-  // RISOL MENTAI
   if(menu === "Risol Mentai"){
     total = jumlah * 4000;
   }
 
-  // RISOL MATCHA
   if(menu === "Risol Matcha"){
     total = jumlah * 4000;
   }
@@ -184,9 +180,7 @@ import {
   getFirestore,
   collection,
   addDoc,
-  onSnapshot,
-  query,
-  orderBy
+  onSnapshot
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
@@ -216,7 +210,6 @@ window.simpanData = async function(){
 
   let total = 0;
 
-  // RISOL MAYO
   if(menu === "Risol Mayo"){
 
     if(jumlah >= 3){
@@ -235,27 +228,34 @@ window.simpanData = async function(){
 
   }
 
-  // RISOL COKLAT
   if(menu === "Risol Coklat"){
     total = jumlah * 4000;
   }
 
-  // RISOL MENTAI
   if(menu === "Risol Mentai"){
     total = jumlah * 4000;
   }
 
-  // RISOL MATCHA
   if(menu === "Risol Matcha"){
     total = jumlah * 4000;
   }
+
+  const sekarang = new Date();
+
+  const tanggal = sekarang.toLocaleDateString("id-ID");
+
+  const jam = sekarang.toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 
   await addDoc(collection(db, "penjualan"), {
 
     menu: menu,
     jumlah: jumlah,
     total: total,
-    waktu: new Date()
+    tanggal: tanggal,
+    jam: jam
 
   });
 
@@ -263,39 +263,13 @@ window.simpanData = async function(){
 
 };
 
-const q = query(
-  collection(db, "penjualan"),
-  orderBy("waktu", "desc")
-);
-
-onSnapshot(q, (snapshot) => {
+onSnapshot(collection(db, "penjualan"), (snapshot) => {
 
   let html = "";
 
   snapshot.forEach((doc) => {
 
     const data = doc.data();
-
-    let waktu = null;
-
-    if(data.waktu){
-      waktu = data.waktu.toDate();
-    }
-
-    const tanggal = waktu
-      ? waktu.toLocaleDateString("id-ID", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric"
-        })
-      : "-";
-
-    const jam = waktu
-      ? waktu.toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit"
-        })
-      : "-";
 
     html += `
       <li>
@@ -306,9 +280,9 @@ onSnapshot(q, (snapshot) => {
 
         Rp${data.total.toLocaleString("id-ID")}<br><br>
 
-        📅 ${tanggal}<br>
+        📅 ${data.tanggal || "-"}<br>
 
-        🕒 ${jam}
+        🕒 ${data.jam || "-"}
 
       </li>
     `;
