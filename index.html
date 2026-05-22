@@ -276,11 +276,29 @@ onSnapshot(q, (snapshot) => {
 
     const data = doc.data();
 
+    const waktu = data.waktu?.toDate();
+
+    const tanggal = waktu
+      ? waktu.toLocaleDateString("id-ID")
+      : "-";
+
+    const jam = waktu
+      ? waktu.toLocaleTimeString("id-ID")
+      : "-";
+
     html += `
       <li>
+
         <b>${data.menu}</b><br>
+
         ${data.jumlah} pcs<br>
-        Rp${data.total.toLocaleString("id-ID")}
+
+        Rp${data.total.toLocaleString("id-ID")}<br><br>
+
+        📅 ${tanggal}<br>
+
+        🕒 ${jam}
+
       </li>
     `;
 
