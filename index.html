@@ -278,7 +278,7 @@ onSnapshot(collection(db, "penjualan"), (snapshot) => {
 
         ${data.jumlah} pcs<br>
 
-        Rp${data.total.toLocaleString("id-ID")}<br><br>
+        Rp${Number(data.total).toLocaleString("id-ID")}<br><br>
 
         📅 ${data.tanggal || "-"}<br>
 
