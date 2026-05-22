@@ -4,8 +4,85 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kasir Risol</title>
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#f5f5f5;
+      margin:0;
+      padding:20px;
+    }
+
+    .container{
+      max-width:400px;
+      margin:auto;
+      background:white;
+      padding:20px;
+      border-radius:15px;
+      box-shadow:0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1{
+      text-align:center;
+    }
+
+    label{
+      display:block;
+      margin-top:15px;
+      margin-bottom:5px;
+      font-weight:bold;
+    }
+
+    select,
+    input{
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #ccc;
+      box-sizing:border-box;
+    }
+
+    button{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      margin-top:15px;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    .hitung{
+      background:#ff9800;
+      color:white;
+    }
+
+    .save{
+      background:#4caf50;
+      color:white;
+    }
+
+    .hasil{
+      text-align:center;
+      margin-top:20px;
+      font-size:24px;
+      font-weight:bold;
+    }
+
+    ul{
+      padding:0;
+      list-style:none;
+    }
+
+    li{
+      background:#f1f1f1;
+      padding:10px;
+      border-radius:10px;
+      margin-top:10px;
+    }
+  </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -13,6 +90,7 @@
   <h1>KASIR RISOL</h1>
 
   <label>Pilih Menu</label>
+
   <select id="menu">
     <option>Risol Mayo</option>
     <option>Risol Coklat</option>
@@ -21,9 +99,10 @@
   </select>
 
   <label>Jumlah</label>
+
   <input type="number" id="jumlah" placeholder="Masukkan jumlah">
 
-  <button onclick="hitungTotal()">
+  <button class="hitung" onclick="hitungTotal()">
     Hitung Total
   </button>
 
@@ -31,7 +110,7 @@
     <h2 id="total">Rp0</h2>
   </div>
 
-  <button onclick="simpanData()" class="save">
+  <button class="save" onclick="simpanData()">
     Simpan Penjualan
   </button>
 
@@ -41,30 +120,112 @@
 
 </div>
 
-<script src="script.js"></script>
+<script>
+function hitungTotal(){
+
+  const menu = document.getElementById("menu").value;
+  const jumlah = document.getElementById("jumlah").value;
+
+  let harga = 0;
+
+  if(menu === "Risol Mayo") harga = 3000;
+  if(menu === "Risol Coklat") harga = 2500;
+  if(menu === "Risol Mentai") harga = 4000;
+  if(menu === "Risol Matcha") harga = 3500;
+
+  const total = harga * jumlah;
+
+  document.getElementById("total").innerText =
+    "Rp" + total.toLocaleString("id-ID");
+}
+</script>
 
 <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCPyIkdTZVPBonxCjPDtHo5JeDVqtjfUTE",
-    authDomain: "risol-app.firebaseapp.com",
-    projectId: "risol-app",
-    storageBucket: "risol-app.firebasestorage.app",
-    messagingSenderId: "710080225252",
-    appId: "1:710080225252:web:0f385760c1dac26d4731f1",
-    measurementId: "G-8QKKDJK2Q3"
-  };
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCPyIkdTZVPBonxCjPDtHo5JeDVqtjfUTE",
+  authDomain: "risol-app.firebaseapp.com",
+  projectId: "risol-app",
+  storageBucket: "risol-app.firebasestorage.app",
+  messagingSenderId: "710080225252",
+  appId: "1:710080225252:web:0f385760c1dac26d4731f1",
+  measurementId: "G-8QKKDJK2Q3"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+window.simpanData = async function(){
+
+  const menu = document.getElementById("menu").value;
+
+  const jumlah = parseInt(
+    document.getElementById("jumlah").value
+  );
+
+  let harga = 0;
+
+  if(menu === "Risol Mayo") harga = 3000;
+  if(menu === "Risol Coklat") harga = 2500;
+  if(menu === "Risol Mentai") harga = 4000;
+  if(menu === "Risol Matcha") harga = 3500;
+
+  const total = harga * jumlah;
+
+  await addDoc(collection(db, "penjualan"), {
+
+    menu: menu,
+    jumlah: jumlah,
+    total: total,
+    waktu: new Date()
+
+  });
+
+  alert("Penjualan berhasil disimpan!");
+
+};
+
+const q = query(
+  collection(db, "penjualan"),
+  orderBy("waktu", "desc")
+);
+
+onSnapshot(q, (snapshot) => {
+
+  let html = "";
+
+  snapshot.forEach((doc) => {
+
+    const data = doc.data();
+
+    html += `
+      <li>
+        <b>${data.menu}</b><br>
+        ${data.jumlah} pcs<br>
+        Rp${data.total.toLocaleString("id-ID")}
+      </li>
+    `;
+
+  });
+
+  document.getElementById("riwayat").innerHTML = html;
+
+});
+
 </script>
 
 </body>
